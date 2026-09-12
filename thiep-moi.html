@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thư mời 🌿</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;1,500;1,600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#FBFBF3;
+    --deep:#1E3B26;
+    --forest:#2F5B3B;
+    --forest-soft:#4C7A52;
+    --sage-pale:#EAF0E3;
+    --gold:#B8963C;
+    --line:#CFE0BF;
+  }
+  *{box-sizing:border-box;}
+  html,body{ margin:0; min-height:100vh; }
+  body{
+    background:var(--sage-pale);
+    font-family:'Manrope', sans-serif;
+    color:var(--deep);
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px 14px;
+    position:relative;
+    overflow-x:hidden;
+  }
+
+  .stage{
+    position:relative;
+    z-index:1;
+    width:100%;
+    max-width:460px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+  }
+
+  .step{
+    display:none;
+    width:100%;
+    flex-direction:column;
+    align-items:center;
+    opacity:0;
+    transform:scale(0.94);
+    transition:opacity .5s ease, transform .5s ease;
+  }
+  .step.current{
+    display:flex;
+  }
+  .step.show{
+    opacity:1;
+    transform:scale(1);
+  }
+  .step.leaving{
+    opacity:0;
+    transform:scale(0.92);
+  }
+
+  .card-frame{
+    width:100%;
+    border-radius:20px;
+    overflow:hidden;
+    box-shadow:0 30px 60px -30px rgba(30,59,38,0.45);
+    border:1px solid var(--line);
+    cursor:pointer;
+    transition:transform .15s ease, box-shadow .15s ease;
+    line-height:0;
+  }
+  .card-frame:hover{
+    transform:translateY(-3px);
+    box-shadow:0 36px 64px -28px rgba(30,59,38,0.5);
+  }
+  .card-frame:active{ transform:scale(0.98); }
+  .card-frame.final{
+    cursor:default;
+  }
+  .card-frame.final:hover{
+    transform:none;
+    box-shadow:0 30px 60px -30px rgba(30,59,38,0.45);
+  }
+  .card-frame img{
+    display:block;
+    width:100%;
+    height:auto;
+  }
+
+  .hint{
+    margin-top:16px;
+    font-size:13.5px;
+    color:var(--forest-soft);
+    font-weight:600;
+  }
+  .hint .tap{
+    color:var(--deep);
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    * { transition:none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="stage" id="stage">
+
+  <div class="step current show" id="step1" data-next="step2">
+    <div class="card-frame">
+      <img src="thiep-1.jpg" alt="Thiệp mời - phong bì">
+    </div>
+    <p class="hint"><span class="tap">Bấm vào thiệp</span> để mở ra 🌿</p>
+  </div>
+
+  <div class="step" id="step2" data-next="step3">
+    <div class="card-frame">
+      <img src="thiep-2.jpg" alt="Thiệp mời - trang bìa">
+    </div>
+    <p class="hint"><span class="tap">Bấm vào thiệp</span> để xem tiếp</p>
+  </div>
+
+  <div class="step" id="step3">
+    <div class="card-frame final">
+      <img src="thiep-3.jpg" alt="Thiệp mời - nội dung">
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const steps = document.querySelectorAll(".step");
+
+  steps.forEach(step => {
+    const nextId = step.dataset.next;
+    if(!nextId) return; // last step has no next, not clickable to advance
+
+    const frame = step.querySelector(".card-frame");
+    frame.addEventListener("click", () => {
+      const nextStep = document.getElementById(nextId);
+
+      step.classList.remove("show");
+      step.classList.add("leaving");
+
+      setTimeout(() => {
+        step.classList.remove("current", "leaving");
+        nextStep.classList.add("current");
+        requestAnimationFrame(() => {
+          nextStep.classList.add("show");
+        });
+      }, 350);
+    });
+  });
+</script>
+
+</body>
+</html>
